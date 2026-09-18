@@ -12,6 +12,7 @@ const OrbitScene = lazy(() => import('./components/OrbitScene'))
 
 const github = 'https://github.com/CarlosJChileS'
 const linkedin = 'https://www.linkedin.com/in/carloschile/'
+const sectionLinks = [['inicio', 'Inicio'], ['tecnologias', 'Stack'], ['proyectos', 'Proyectos'], ['perfil', 'Sobre mí'], ['contacto', 'Contacto']]
   const catalogue = Array.from(new Map([...projects.slice(3), ...moreProjects].map(project => [project.repo, project])).values())
   const compactTechnologyAreas = [
     { title: 'IA y agentes', tags: ['Python', 'FastAPI', 'LangGraph', 'RAG', 'TensorFlow.js'], repo: 'prompt-y-reza' },
@@ -58,11 +59,24 @@ function ProjectDiagram({ index }) {
 export default function App() {
   const [menu, setMenu] = useState(false)
   const [theme, setTheme] = useState(() => localStorage.getItem('portfolio-theme') || 'dark')
+  const [activeSection, setActiveSection] = useState('inicio')
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme
     localStorage.setItem('portfolio-theme', theme)
   }, [theme])
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(entries => {
+      const visible = entries.filter(entry => entry.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0]
+      if (visible) setActiveSection(visible.target.id)
+    }, { rootMargin: '-32% 0px -52% 0px', threshold: [0, .1, .4] })
+    sectionLinks.forEach(([id]) => {
+      const section = document.getElementById(id)
+      if (section) observer.observe(section)
+    })
+    return () => observer.disconnect()
+  }, [])
 
   const { enabled, paused, setPaused, reduced } = useMotionControl()
   const heroRef = useRef(null)
@@ -83,9 +97,9 @@ export default function App() {
   const reveal = !enabled ? { initial: false, animate: { opacity: 1, y: 0 } } : {initial:{opacity:0,y:24},whileInView:{opacity:1,y:0},viewport:{once:true,amount:.1},transition:{duration:.65}}
   return <>
     <a className="skip-link" href="#contenido">Saltar al contenido</a>
-    <nav className="quick-navigation" aria-label="Accesos rápidos"><a href="#inicio">Inicio</a><a href="#proyectos">Proyectos</a><a href="#tecnologias">Stack</a><a href="#contacto">Contacto</a></nav>
+    <nav className="quick-navigation" aria-label="Accesos rápidos">{sectionLinks.filter(([id]) => id !== 'perfil').map(([id, label]) => <a key={id} href={'#' + id} aria-current={activeSection === id ? 'page' : undefined}>{label}</a>)}</nav>
     <motion.div className="reading-progress" style={{ scaleX: scrollYProgress }} aria-hidden="true"/><main id="contenido" className="portfolio-main"><section ref={heroRef} className="hero" id="inicio" onPointerMove={followPointer} onPointerLeave={resetPointer}>
-      <header className="header shell"><a className="brand" href="#inicio">Carlos Chile<span>IA · agentes · full stack</span></a><div className="header-actions"><button className="theme-toggle" onClick={()=>setTheme(theme === 'dark' ? 'light' : 'dark')} aria-label={theme === 'dark' ? 'Activar modo claro' : 'Activar modo oscuro'} aria-pressed={theme === 'light'}>{theme === 'dark' ? <Sun size={17}/> : <Moon size={17}/>}<span>{theme === 'dark' ? 'Claro' : 'Oscuro'}</span></button><button className="menu-toggle" onClick={()=>setMenu(!menu)} aria-label={menu?'Cerrar menú':'Abrir menú'} aria-expanded={menu} aria-controls="navigation">{menu?<X size={25}/>:<List size={25}/>}</button></div><nav id="navigation" className={menu?'navigation is-open':'navigation'} aria-label="Navegación principal">{[['tecnologias','Stack'],['proyectos','Proyectos'],['perfil','Sobre mí'],['contacto','Contacto ↗']].map(([id,label])=><a href={'#'+id} key={id} onClick={()=>setMenu(false)}>{label}</a>)}</nav></header>
+      <header className="header shell"><a className="brand" href="#inicio">Carlos Chile<span>IA · agentes · full stack</span></a><div className="header-actions"><button className="theme-toggle" onClick={()=>setTheme(theme === 'dark' ? 'light' : 'dark')} aria-label={theme === 'dark' ? 'Activar modo claro' : 'Activar modo oscuro'} aria-pressed={theme === 'light'}>{theme === 'dark' ? <Sun size={17}/> : <Moon size={17}/>}<span>{theme === 'dark' ? 'Claro' : 'Oscuro'}</span></button><button className="menu-toggle" onClick={()=>setMenu(!menu)} aria-label={menu?'Cerrar menú':'Abrir menú'} aria-expanded={menu} aria-controls="navigation">{menu?<X size={25}/>:<List size={25}/>}</button></div><nav id="navigation" className={menu?'navigation is-open':'navigation'} aria-label="Navegación principal">{sectionLinks.slice(1).map(([id,label])=><a href={'#'+id} key={id} onClick={()=>setMenu(false)} aria-current={activeSection === id ? 'page' : undefined}>{label}</a>)}</nav></header>
       <Orbit enabled={enabled} y={planetY} x={smoothX} pointerY={smoothY}/>
       <div className="hero-speedlines" aria-hidden="true"><i/><i/><i/></div><div className="hero-topnote"><AquariusMark className="hero-aquarius"/>Desde Ecuador.<br/>Conectando posibilidades.</div>
       <div className="hero-copy shell"><p className="serif-intro">Entre la lógica <span>y la curiosidad.</span></p><h1><span className="title-mask"><span className="title-line">AI SYSTEMS</span></span><span className="title-mask title-second"><span className="title-line">&amp; EXPLORER<StarMark className="title-star"/></span></span></h1><div className="hero-signature"><AquariusConstellation/><span>{identity.sign} / {identity.birthDate}</span><small>{identity.constellationLabel}</small></div><div className="hero-bottom"><p>Soy Carlos Chile Silva. Construyo productos con IA,<br/>agentes, datos y experiencias full stack.</p><a className="round-link" href="#proyectos" aria-label="Explorar proyectos"><ArrowDown size={23}/></a><div className="hero-controls"><span className="edition">PORTAFOLIO / 2026<br/>IA · AGENTES · DATOS · WEB</span><button className="motion-toggle" onClick={()=>setPaused(!paused)} aria-pressed={paused || !!reduced} disabled={!!reduced}>{paused || reduced ? <Play size={12}/> : <Pause size={12}/>}<span>{reduced ? "Movimiento reducido" : paused ? "Activar movimiento" : "Pausar movimiento"}</span></button></div></div></div>

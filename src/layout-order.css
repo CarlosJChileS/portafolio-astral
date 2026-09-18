@@ -66,7 +66,18 @@ html[data-theme="light"] .orbital-library { background: transparent; }
 html[data-theme="light"] .stack-carousel-icon { background: #e9e7dfcc; }
 .quick-navigation { right: 28px; top: auto; bottom: 28px; transform: none; flex-direction: row; gap: 2px; padding: 4px; border: 1px solid #66706077; border-radius: 999px; background: #111712c9; backdrop-filter: blur(12px); }
 .quick-navigation a { border: 0; background: transparent; padding: 7px 9px; border-radius: 999px; }
+.quick-navigation a[aria-current="page"] { color: var(--bg); background: var(--accent); }
 html[data-theme="light"] .quick-navigation { background: #f4f1e8df; }
+
+.library-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 22px; margin-bottom: 26px; }
+.library-toolbar .library-filters { margin: 0; }
+.library-search { display: flex; flex: 0 0 235px; align-items: center; gap: 8px; padding: 8px 0; border-bottom: 1px solid var(--line); color: var(--muted); }
+.library-search input { width: 100%; border: 0; outline: 0; background: transparent; color: var(--ink); font-size: 11px; }
+.library-search input::placeholder { color: var(--muted); }
+.library-search button { display: grid; place-items: center; padding: 0; border: 0; background: transparent; color: var(--muted); }
+.library-search button:hover { color: var(--accent); }
+.library-empty { display: grid; place-items: start; gap: 14px; min-height: 180px; padding: 30px 0; color: var(--muted); }
+.library-empty button { padding: 8px 0; border: 0; border-bottom: 1px solid var(--accent); background: transparent; color: var(--ink); font-size: 11px; }
 
 @media (max-width: 680px) {
   .stack-heading { display: block; margin-bottom: 26px; }
@@ -75,6 +86,8 @@ html[data-theme="light"] .quick-navigation { background: #f4f1e8df; }
   .stack-carousel-track { gap: 11px; animation-duration: 28s; }
   .stack-carousel-icon { padding: 8px 11px; }
   .stack-carousel-group { padding-right: 22px; }
+  .library-toolbar { display: block; }
+  .library-search { margin-top: 18px; max-width: none; }
 }
 
 @media (max-width: 680px) {
