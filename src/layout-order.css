@@ -8,6 +8,24 @@
   background: var(--bg);
 }
 
+/* Hero: el mensaje se entiende antes que la ornamentación orbital. */
+.hero { min-height: min(860px, 100svh); }
+.hero-copy { padding-top: clamp(130px, 17vh, 190px); }
+.hero .serif-intro { font-family: 'DM Sans', Arial, sans-serif; font-size: 12px; font-style: normal; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; }
+.hero .serif-intro span { display: inline; margin-left: 10px; font-weight: 400; letter-spacing: .02em; text-transform: none; }
+.hero h1 { max-width: 760px; font-size: clamp(62px, 7.2vw, 96px); letter-spacing: -.035em; line-height: .9; text-wrap: balance; }
+.hero .title-second { margin-top: 5px; }
+.hero-bottom > p { max-width: 420px; font-size: 14px; }
+.edition { letter-spacing: .8px; }
+
+@media (max-width: 680px) {
+  .hero { min-height: 720px; }
+  .hero-copy { padding-top: 138px; }
+  .hero .serif-intro { font-size: 10px; line-height: 1.6; max-width: 245px; }
+  .hero .serif-intro span { display: block; margin-left: 0; }
+  .hero h1 { font-size: clamp(54px, 17vw, 78px); }
+}
+
 .header-actions { display: flex; align-items: center; gap: 13px; }
 .theme-toggle {
   display: inline-flex;
